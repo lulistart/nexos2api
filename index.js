@@ -212,7 +212,7 @@ app.post('/v1/chat/completions', async (req, res) => {
     
     const nexosData = {
       handler: {
-        id: handlerId,  // 使用根据模型选择的 handler ID
+        id: handlerId,
         type: 'model',
         fallbacks: true
       },
@@ -221,34 +221,28 @@ app.post('/v1/chat/completions', async (req, res) => {
         client_metadata: {},
         files: []
       },
-      advanced_parameters: {},  // 先创建空对象
+      advanced_parameters: {},
       functionalityHeader: 'chat',
       tools: {
-        web_search: { enabled: true },
+        web_search: { enabled: false },
         deep_research: { enabled: false },
         code_interpreter: { enabled: true }
       },
-      enabled_integrations: []
+      enabled_integrations: [],
+      chat: {}
     };
 
-    // 只在有值时添加 advanced_parameters
-    if (adjustedMaxTokens) {
+    // 只在用户明确指定时添加参数值
+    if (req.body.max_tokens && adjustedMaxTokens) {
       nexosData.advanced_parameters.max_completion_tokens = adjustedMaxTokens;
     }
     if (temperature !== undefined && temperature !== 1) {
       nexosData.advanced_parameters.temperature = temperature;
     }
-    
-    // 如果 advanced_parameters 为空，删除它
-    if (Object.keys(nexosData.advanced_parameters).length === 0) {
-      delete nexosData.advanced_parameters;
-    }
 
-    // 如果获取到了最新消息 ID，添加到请求中
+    // 如果获取到了最新消息 ID，添加到 chat 中
     if (lastMessageId) {
-      nexosData.chat = {
-        last_message_id: lastMessageId
-      };
+      nexosData.chat.last_message_id = lastMessageId;
     }
     
     formData.append('data', JSON.stringify(nexosData));
