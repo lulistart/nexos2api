@@ -1,0 +1,17 @@
+{
+  "name": "nexos-openai-proxy",
+  "version": "1.0.0",
+  "description": "OpenAI compatible API proxy for nexos.ai",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "axios": "^1.6.0",
+    "form-data": "^4.0.0",
+    "dotenv": "^16.3.1"
+  }
+}
